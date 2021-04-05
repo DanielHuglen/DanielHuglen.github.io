@@ -1,0 +1,29 @@
+.filter-input-groups-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 16px 0;
+}
+
+.filter-input-groups-container span {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.restaurant-list-container {
+    width: 100vw;
+}
+
+.restaurant-list-container table {
+    width: 100vw;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 16px 0;
+}
+
+.pagination-specific-pages {
+    display: block;
+}
