@@ -118,8 +118,13 @@
               "devServerTarget": "restaurant-rating:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {}
         }
       }
-    }},
+    }
+  },
   "defaultProject": "restaurant-rating"
 }
