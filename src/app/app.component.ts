@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { MatTable } from "@angular/material/table";
 import { Restaurant, RestaurantResponse, SearchFilter } from "./app.models";
 import { AppService } from "./app.service";
@@ -18,11 +18,11 @@ export class AppComponent {
     public set currentInternalPage(page: number) {
         this._currentInternalPage = page;
 
-        while (this.currentlyDisplayedRestaurants?.length < 1 && this.currentInternalPage > 1) {
+        while(this.currentlyDisplayedRestaurants?.length < 1 && this.currentInternalPage > 1) {
             this.currentInternalPage--;
         }
     }
-    
+
     // Used in template
     public get currentInternalPage(): number { return this._currentInternalPage }
     public get currentExternalPage(): number { return this.currentRestaurantResponse?.page }
@@ -58,6 +58,21 @@ export class AppComponent {
             this.filterForm.value.place,
             this.filterForm.value.zipCode,
             this.filterForm.value.organizationNumber);
+    }
+
+    public getRatingClass(rating: string): string {
+        switch(rating) {
+            case ("0"):
+            case ("1"):
+            case ("2"):
+                return "rating-good";
+            case ("3"):
+                return "rating-average";
+            case ("4"):
+                return "rating-bad";
+            default:
+                return "rating-not-available";
+        };
     }
 
     public getRestaurantsDisplayedOnPage(page: number): Restaurant[] {

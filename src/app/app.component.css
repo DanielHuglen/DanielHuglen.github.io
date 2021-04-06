@@ -35,6 +35,20 @@ header {
 .restaurant-list-container table {
     width: 100%;
 }
+.rating-good {
+    font-weight: bold;
+    color:green;
+}
+.rating-average {
+    font-weight: bold;
+    color: orange;
+}
+.rating-bad {
+    color: red;
+}
+.rating-not-available {
+    color: grey;
+}
 
 td.mat-cell:first-of-type {
     width: 25%;
@@ -43,6 +57,10 @@ td.mat-cell:first-of-type {
 .mat-cell {
     width: 17%;
     padding-right: 16px;
+}
+
+tr.mat-row:nth-child(2n) {
+    background-color: whitesmoke;
 }
 
 .pagination-container {
@@ -57,4 +75,10 @@ td.mat-cell:first-of-type {
 
 .pagination-specific-pages {
     display: block;
+}
+
+.selected-page-button {
+    background-color: rgb(103, 58, 183);
+    color: white;
+    border: 0;
 }

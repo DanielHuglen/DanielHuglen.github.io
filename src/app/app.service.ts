@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { SearchFilter } from './app.models';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { SearchFilter } from "./app.models";
 
 @Injectable()
 export class AppService {
