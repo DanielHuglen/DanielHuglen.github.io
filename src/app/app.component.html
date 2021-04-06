@@ -1,64 +1,92 @@
 <header>
-    <h1>Tilsynsresultatsøk</h1>
+    <h1 class="mat-display-1 title-header">Tilsynsresultatsøk</h1>
 </header>
 
-<body>
-    <form [formGroup]="filterForm" ngDefaultControl (ngSubmit)="onSubmitFilters()">
-        <div class="filter-input-groups-container">
-            <span>
-                <label for="rating">Karakter</label>
-                <input id="rating" type="number" formControlName="rating">
-            </span>
-            <span>
-                <label for="name">Navn</label>
-                <input id="name" type="text" formControlName="name">
-            </span>
-            <span>
-                <label for="place">Poststed</label>
-                <input id="place" type="text" formControlName="place">
-            </span>
-            <span>
-                <label for="zipCode">Postnummer</label>
-                <input id="zipCode" type="number" formControlName="zipCode">
-            </span>
-            <span>
-                <label for="organizationNumber">Org. nummer</label>
-                <input id="organizationNumber" type="number" formControlName="organizationNumber">
-            </span>
+<body class="mat-app-background ">
+    <div class="search-container">
+        <form [formGroup]="filterForm" ngDefaultControl (ngSubmit)="onSubmitFilters()">
+            <div class="filter-input-groups-container">
+                <span>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Karakter</mat-label>
+                        <input matInput type="number" formControlName="rating">
+                    </mat-form-field>
+                </span>
+                <span>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Navn</mat-label>
+                        <input matInput type="text" formControlName="name">
+                    </mat-form-field>
+                </span>
+                <span>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Poststed</mat-label>
+                        <input matInput type="text" formControlName="place">
+                    </mat-form-field>
+                </span>
+                <span>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Postnummer</mat-label>
+                        <input matInput type="number" formControlName="zipCode">
+                    </mat-form-field>
+                </span>
+                <span>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Org. nummer</mat-label>
+                        <input matInput type="number" formControlName="organizationNumber">
+                    </mat-form-field>
+                </span>
+            </div>
+
+            <button mat-flat-button color="primary" type="submit">Aktiver filtre</button>
+        </form>
+
+        <div *ngIf="restaurantList; else noResultErrorMessage" class="restaurant-list-container">
+            <table mat-table [dataSource]="restaurantList" class="mat-elevation-z8">
+                <ng-container matColumnDef="navn">
+                    <th mat-header-cell *matHeaderCellDef> Navn </th>
+                    <td mat-cell *matCellDef="let element"> {{element.navn}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="total_karakter">
+                    <th mat-header-cell *matHeaderCellDef> Total karakter </th>
+                    <td mat-cell *matCellDef="let element"> {{element.total_karakter}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="karakter1">
+                    <th mat-header-cell *matHeaderCellDef> Rutiner og ledelse </th>
+                    <td mat-cell *matCellDef="let element"> {{element.karakter1}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="karakter2">
+                    <th mat-header-cell *matHeaderCellDef> Lokaler og utstyr </th>
+                    <td mat-cell *matCellDef="let element"> {{element.karakter2}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="karakter3">
+                    <th mat-header-cell *matHeaderCellDef> Mat-håndtering og tilberedning </th>
+                    <td mat-cell *matCellDef="let element"> {{element.karakter3}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="karakter4">
+                    <th mat-header-cell *matHeaderCellDef> Merking og sporbarhet </th>
+                    <td mat-cell *matCellDef="let element"> {{element.karakter4}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
         </div>
+        <ng-template #noResultErrorMessage>Ingen resultater tilgjengelig.</ng-template>
 
-        <button type="submit">Apply</button>
-    </form>
-
-    <div *ngIf="restaurantList; else noResultErrorMessage" class="restaurant-list-container">
-        <table>
-            <tr>
-                <th>Navn</th>
-                <th>Total karakter</th>
-                <th>Rutiner og ledelse</th>
-                <th>Lokaler og utstyr</th>
-                <th>Mat-håndtering og tilberedning</th>
-                <th>Merking og sporbarhet</th>
-            </tr>
-            <tr *ngFor="let restaurant of restaurantList">
-                <td>{{restaurant.navn}}</td>
-                <td>{{restaurant.total_karakter}}</td>
-                <td>{{restaurant.karakter1}}</td>
-                <td>{{restaurant.karakter2}}</td>
-                <td>{{restaurant.karakter3}}</td>
-                <td>{{restaurant.karakter4}}</td>
-            </tr>
-        </table>
-    </div>
-    <ng-template #noResultErrorMessage>Ingen resultater tilgjengelig.</ng-template>
-
-    <div class="pagination-container">
-        <button (click)="onPageChange(1)">First</button>
-        <button (click)="onPageChange(currentPage > 1 ? currentPage - 1 : currentPage)">Previous</button>
-        <ng-container *ngFor="let _ of [].constructor(7); let i = index">
-            <button (click)="onPageChange(i + currentPage)">{{i + currentPage}}</button>
-        </ng-container>
-        <button (click)="onPageChange(currentPage < totalPages ? currentPage + 1 : currentPage)">Next</button>
-        <button (click)="onPageChange(totalPages)">Last</button>
+        <div class="pagination-container">
+            <button mat-stroked-button color="primary" (click)="onPageChange(1)">Første</button>
+            <button mat-stroked-button color="primary" (click)="onPageChange(currentInternalPage > 1 ? currentInternalPage - 1 : currentInternalPage)">Forrige</button>
+            <ng-container *ngFor="let _ of pageNumbers; let i = index">
+                <button mat-stroked-button color="primary" (click)="onPageChange(i + currentInternalPage)">{{i + currentInternalPage}}</button>
+            </ng-container>
+            <button mat-stroked-button color="primary" (click)="onPageChange(currentInternalPage < totalPages ? currentInternalPage + 1 : currentInternalPage)">Neste</button>
+            <button mat-stroked-button color="primary" (click)="onPageChange(totalPages)">Siste</button>
+        </div>
     </div>
 </body>

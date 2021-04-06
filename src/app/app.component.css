@@ -1,7 +1,24 @@
+header {
+    background-color: #673ab7;
+    color: white;
+}
+
+.title-header {
+    text-align: center;
+    background: #673ab7;
+    padding: 24px 0 24px;
+    margin: 0;
+}
+
+.search-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
 .filter-input-groups-container {
     display: flex;
     justify-content: space-between;
-    margin: 16px 0;
+    margin: 16px 0 0;
 }
 
 .filter-input-groups-container span {
@@ -11,17 +28,31 @@
 }
 
 .restaurant-list-container {
-    width: 100vw;
+    width: 100%;
+    margin-top: 32px;
 }
 
 .restaurant-list-container table {
-    width: 100vw;
+    width: 100%;
+}
+
+td.mat-cell:first-of-type {
+    width: 25%;
+}
+
+.mat-cell {
+    width: 17%;
+    padding-right: 16px;
 }
 
 .pagination-container {
     display: flex;
     justify-content: space-between;
-    margin: 16px 0;
+    padding: 16px 0;
+}
+
+.pagination-container button {
+    width: 100%;
 }
 
 .pagination-specific-pages {

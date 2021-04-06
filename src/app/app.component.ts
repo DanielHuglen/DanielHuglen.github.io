@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatTable } from "@angular/material/table";
 import { Restaurant, RestaurantResponse, SearchFilter } from "./app.models";
 import { AppService } from "./app.service";
 
@@ -15,9 +16,20 @@ export class AppComponent {
     private currentRestaurantResponse: RestaurantResponse;
 
     // Used in template
-    public get restaurantList(): Restaurant[] { return this.currentRestaurantResponse?.entries }
-    public get currentPage(): number { return this.currentRestaurantResponse?.page }
-    public get totalPages(): number { return this.currentRestaurantResponse?.pages }
+    public currentInternalPage: number = 1;
+    public get currentExternalPage(): number { return this.currentRestaurantResponse?.page }
+    public get totalPages(): number { return this.currentRestaurantResponse?.pages * 5 }
+    public get pageNumbers(): any[] { return new Array(7);}
+    public get restaurantList(): Restaurant[] {
+        let pagePart = Math.round((this.currentInternalPage / 5 - (Math.floor(this.currentInternalPage / 5))) * 100)
+        if(pagePart === 0)
+            pagePart = 100;
+
+        return this.currentRestaurantResponse?.entries.slice(pagePart - 20, pagePart);
+    }
+
+    @ViewChild(MatTable) table: MatTable<any>;
+    displayedColumns = ["navn", "total_karakter", "karakter1", "karakter2", "karakter3", "karakter4",];
 
     filterForm = new FormGroup({
         rating: new FormControl("", Validators.pattern("[0-5]")),
@@ -50,9 +62,19 @@ export class AppComponent {
     }
 
     public onPageChange(page: number) {
-        this.appService.getRestaurants(this.getFilterValues(), page).subscribe((restaurantData: RestaurantResponse) => {
-            if(restaurantData)
-                this.currentRestaurantResponse = restaurantData;
-        });
+        if(page === this.currentInternalPage)
+            return;
+
+        if(Math.ceil(page / 5) === this.currentExternalPage) {
+            this.currentInternalPage = page;
+        }
+        else {
+            this.appService.getRestaurants(this.getFilterValues(), Math.ceil(page / 5)).subscribe((restaurantData: RestaurantResponse) => {
+                if(restaurantData)
+                    this.currentRestaurantResponse = restaurantData;
+
+                this.currentInternalPage = page;
+            });
+        }
     }
 }
