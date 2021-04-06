@@ -41,8 +41,8 @@
             <button mat-flat-button color="primary" type="submit">Aktiver filtre</button>
         </form>
 
-        <div *ngIf="restaurantList; else noResultErrorMessage" class="restaurant-list-container">
-            <table mat-table [dataSource]="restaurantList" class="mat-elevation-z8">
+        <div *ngIf="currentlyDisplayedRestaurants; else noResultErrorMessage" class="restaurant-list-container">
+            <table mat-table [dataSource]="currentlyDisplayedRestaurants" class="mat-elevation-z8">
                 <ng-container matColumnDef="navn">
                     <th mat-header-cell *matHeaderCellDef> Navn </th>
                     <td mat-cell *matCellDef="let element"> {{element.navn}} </td>
@@ -82,8 +82,9 @@
         <div class="pagination-container">
             <button mat-stroked-button color="primary" (click)="onPageChange(1)">Første</button>
             <button mat-stroked-button color="primary" (click)="onPageChange(currentInternalPage > 1 ? currentInternalPage - 1 : currentInternalPage)">Forrige</button>
-            <ng-container *ngFor="let _ of pageNumbers; let i = index">
-                <button mat-stroked-button color="primary" (click)="onPageChange(i + currentInternalPage)">{{i + currentInternalPage}}</button>
+            <ng-container *ngFor="let _ of amountOfPageNumbersToDisplay; let i = index">
+                <button *ngIf="isPageNumberDisplayed(i + currentInternalPage)" mat-stroked-button color="primary"
+                    (click)="onPageChange(i + currentInternalPage)">{{i + currentInternalPage}}</button>
             </ng-container>
             <button mat-stroked-button color="primary" (click)="onPageChange(currentInternalPage < totalPages ? currentInternalPage + 1 : currentInternalPage)">Neste</button>
             <button mat-stroked-button color="primary" (click)="onPageChange(totalPages)">Siste</button>

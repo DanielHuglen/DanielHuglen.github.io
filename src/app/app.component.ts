@@ -14,19 +14,25 @@ import { AppService } from "./app.service";
 export class AppComponent {
     // Latest search result
     private currentRestaurantResponse: RestaurantResponse;
+    private _currentInternalPage: number = 1;
+    public set currentInternalPage(page: number) {
+        this._currentInternalPage = page;
 
+        while (this.currentlyDisplayedRestaurants?.length < 1 && this.currentInternalPage > 1) {
+            this.currentInternalPage--;
+        }
+    }
+    
     // Used in template
-    public currentInternalPage: number = 1;
+    public get currentInternalPage(): number { return this._currentInternalPage }
     public get currentExternalPage(): number { return this.currentRestaurantResponse?.page }
     public get totalPages(): number { return this.currentRestaurantResponse?.pages * 5 }
-    public get pageNumbers(): any[] { return new Array(7);}
-    public get restaurantList(): Restaurant[] {
-        let pagePart = Math.round((this.currentInternalPage / 5 - (Math.floor(this.currentInternalPage / 5))) * 100)
-        if(pagePart === 0)
-            pagePart = 100;
-
-        return this.currentRestaurantResponse?.entries.slice(pagePart - 20, pagePart);
-    }
+    public get amountOfPageNumbersToDisplay(): any[] { return new Array(7); }
+    public get currentlyDisplayedRestaurants(): Restaurant[] { return this.getRestaurantsDisplayedOnPage(this.currentInternalPage); }
+    public isPageNumberDisplayed(page: number): boolean {
+        const amountOfRestaurantsDisplayedOnPage = this.getRestaurantsDisplayedOnPage(page)?.length;
+        return amountOfRestaurantsDisplayedOnPage > 0 && page < this.totalPages;
+    };
 
     @ViewChild(MatTable) table: MatTable<any>;
     displayedColumns = ["navn", "total_karakter", "karakter1", "karakter2", "karakter3", "karakter4",];
@@ -54,14 +60,24 @@ export class AppComponent {
             this.filterForm.value.organizationNumber);
     }
 
+    public getRestaurantsDisplayedOnPage(page: number): Restaurant[] {
+        let sliceOfPageToDisplay = Math.round((page / 5 - (Math.floor(page / 5))) * 100)
+        if(sliceOfPageToDisplay === 0)
+            sliceOfPageToDisplay = 100;
+
+        return this.currentRestaurantResponse?.entries.slice(sliceOfPageToDisplay - 20, sliceOfPageToDisplay);
+    }
+
     public onSubmitFilters(): void {
         this.appService.getRestaurants(this.getFilterValues()).subscribe((restaurantData: RestaurantResponse) => {
             if(restaurantData)
                 this.currentRestaurantResponse = restaurantData;
+
+            this.currentInternalPage = 1;
         });
     }
 
-    public onPageChange(page: number) {
+    public onPageChange(page: number): void {
         if(page === this.currentInternalPage)
             return;
 
